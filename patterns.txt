@@ -1,0 +1,60 @@
+//
+//  Information retrieval course
+//  First version: Johan Boye 2016
+//
+// In this file you can put your regular expressions
+// for matching non-standard words (like mail addresses).
+//
+// As you have probably already understood, lines beginning
+// with "//" are comments.
+
+
+// Twenty-four seven
+\d+/\d+
+
+// ADD YOUR PATTERNS HERE
+
+//double(-)
+\-{2}
+
+//http MED DENNA FÅR JAG KORREKT PÅ “ZOMBIE” OCH “ATTACK”.
+http(s)?[:word:].+
+
+//http MED DENNA FÅR JAG KORREKT PÅ “ZOMBIE ATTACK” OCH “ZOMBIE”.
+//http(s)?([:word:]+(\.|\/)?).*
+
+// Twenty-four seven
+//\d+/\d+
+
+//citat
+(?<=')(\w)+(?=')
+
+//telefonnummer med plus i början
+\+\d+
+
+//ipadresser och tal separarade med punkter
+(\d{1,3}\.){1,3}\d{1,3}
+
+//email (not ending with !)
+.+\@.+\..+(?<!\!)
+
+//letters separated by dots 
+(\w+\.){2,}
+
+
+// nummer med bindstreck, kan sluta utan bindestreck
+(\d+-)+(\d+)+?
+
+//ett bindestreck
+(\w+-\w+)+
+
+//stora tal med kommatecken
+(\d{1,3}+,)+(\d{1,3})
+
+//apostrofer
+\w+[‘’']\w+
+[‘’']\w+
+
+//tid
+(\d{2}\:)+\d{2}
+
