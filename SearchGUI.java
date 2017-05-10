@@ -34,7 +34,7 @@ public class SearchGUI extends JFrame {
     Indexer indexer;
 
     /**  The query posed by the user, used in search() and relevanceFeedbackSearch() */
-    private Query query; 
+    private Query query = new Query(); 
 	
     /**  The returned documents, used in search() and relevanceFeedbackSearch() */
     private PostingsList results; 
@@ -193,6 +193,7 @@ public class SearchGUI extends JFrame {
 		public void actionPerformed( ActionEvent e ) {
 		    // Turn the search string and into a Query
 		    String queryString = queryWindow.getText().toLowerCase().trim();
+		    query.saveLog(); //Save prevoius log to file before begining new search.
 		    query = new Query( queryString );
 		    // Search and print results. Access to the index is synchronized since
 		    // we don't want to search at the same time we're indexing new files
@@ -323,16 +324,15 @@ public class SearchGUI extends JFrame {
 		    queryType = Index.PERSONALIZED_SEARCH;
 		}
 	    };
-	personalizedItem.addActionListener( setPersonlizedSearch );
+	personalizedItem.addActionListener( setPersonlizedSearch ); 
 	
 	
 	MouseListener mouseListener = new MouseAdapter() {
 	    public void mouseClicked(MouseEvent e) {
 	        if (e.getClickCount() == 2) {
-
 	           String selectedDoc = (String) list.getSelectedValue();
 	           userRequest(selectedDoc);
-	           
+	           query.addToLog(query,)
 	         }
 	    }
 

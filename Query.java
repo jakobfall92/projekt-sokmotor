@@ -31,11 +31,15 @@ public class Query {
     
     public LinkedList<String> terms = new LinkedList<String>();
     public LinkedList<Double> weights = new LinkedList<Double>();
+    public Log log;
+    public LinkedList<LogEntry> logEntries = new LinkedList<LogEntry>();
 
     /**
      *  Creates a new empty Query 
      */
     public Query() {
+        log = new Log();
+        logEntries = log.readLog("log.txt"); //reads user specific log
     }
 	
     /**
@@ -46,6 +50,8 @@ public class Query {
 	while ( tok.hasMoreTokens() ) {
 	    terms.add( tok.nextToken() );
 	    weights.add( new Double(1) );
+        log = new Log();
+        logEntries = log.readLog("log.txt");
 	}    
     }
     
@@ -60,10 +66,21 @@ public class Query {
      *  Returns a shallow copy of the Query
      */
     public Query copy() {
-	Query queryCopy = new Query();
-	queryCopy.terms = (LinkedList<String>) terms.clone();
-	queryCopy.weights = (LinkedList<Double>) weights.clone();
-	return queryCopy;
+    	Query queryCopy = new Query();
+    	queryCopy.terms = (LinkedList<String>) terms.clone();
+    	queryCopy.weights = (LinkedList<Double>) weights.clone();
+    	return queryCopy;
+    }
+
+    public void saveLog() {
+        log.writeLog("log.txt",logEntries);
+    }
+
+    public void addToLog(Query query, int docId) {
+        LogEntry entry = new LogEntry();
+        entry.setClickedDoc(docId);
+        entry.setQuery(query);
+        logEntries.add(entry);
     }
     
     /**

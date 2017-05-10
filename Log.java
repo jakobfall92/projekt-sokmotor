@@ -138,5 +138,34 @@ public class Log {
         }
         
     }
+
+    //reads log and creates a corresponding logEntry object for each line in the log
+    public void writeLog(String location, LinkedList<LogEntry> logEntries){
+        try{
+            file = new File (location);    
+            if(file.isFile()){     
+                printWriter = new PrintWriter(new FileOutputStream(file, true));
+                file.delete();
+                ListIterator<LogEntry> list = logEntries.listIterator(0);
+                while(list.hasNext()) {
+                    LogEntry currentEntry = list.next();
+                    Integer docId = currentEntry.getDocId;
+                    Query query = currentEntry.getQuery();
+                    String temp = "";
+                    for (int i=0; i<query.terms.size(); i++){
+                        temp += " "+query.terms.get(i);
+                    }
+                    printWriter.println(""+docID+","+temp);
+                }
+                printWriter.close();
+            } else{
+                //
+            }
+
+        }
+        catch(Exception e){   
+            System.err.println(e);  
+        }  
+    }
     
 }
