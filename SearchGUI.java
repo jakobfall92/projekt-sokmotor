@@ -332,7 +332,7 @@ public class SearchGUI extends JFrame {
 	        if (e.getClickCount() == 2) {
 	           String selectedDoc = (String) list.getSelectedValue();
 	           userRequest(selectedDoc);
-	           query.addToLog(query,)
+	           query.addToLog(indexer.index.titlesToDocId.get(selectedDoc));
 	         }
 	    }
 

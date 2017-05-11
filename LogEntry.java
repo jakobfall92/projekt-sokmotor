@@ -27,10 +27,6 @@ public class LogEntry implements Comparable<LogEntry>,Serializable {
         return query;
     }
 
-    public String getStringQuery(){
-        return query;
-    }
-
     public int getDocId(){
         return docID;
     }

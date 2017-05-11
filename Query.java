@@ -39,7 +39,7 @@ public class Query {
      */
     public Query() {
         log = new Log();
-        logEntries = log.readLog("log.txt"); //reads user specific log
+        logEntries = log.getLog(); //reads user specific log
     }
 	
     /**
@@ -51,7 +51,7 @@ public class Query {
 	    terms.add( tok.nextToken() );
 	    weights.add( new Double(1) );
         log = new Log();
-        logEntries = log.readLog("log.txt");
+        logEntries = log.getLog();
 	}    
     }
     
@@ -76,10 +76,10 @@ public class Query {
         log.writeLog("log.txt",logEntries);
     }
 
-    public void addToLog(Query query, int docId) {
+    public void addToLog(int docId) {
         LogEntry entry = new LogEntry();
         entry.setClickedDoc(docId);
-        entry.setQuery(query);
+        entry.setQuery(this);
         logEntries.add(entry);
     }
     

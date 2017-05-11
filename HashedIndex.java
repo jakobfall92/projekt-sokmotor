@@ -52,6 +52,10 @@ public class HashedIndex implements Index {
     /**
      *  Inserts this token in the index.
      */
+    public int getDocId(String title) {
+        
+    }
+
     public void insert( String token, int docID, int offset ) {
         //
         //  YOUR CODE HERE

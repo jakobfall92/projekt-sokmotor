@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.logging.Logger;
 import java.io.FileOutputStream;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 
 //!!!OBS!!!
@@ -17,12 +18,12 @@ import java.util.LinkedList;
  //sätt denna i deklarationen
  
  Log log = new Log();
+ Har lagt till en konstruktor så den kor createlogfile automatiskt nar man skapar objeketet.
  
  
  //sätt dessa där ni vill skriva in något i loggen
  
  int fakeDocID = 123; //docID
- log.createLogFile("log.txt"); //hamnar i överordnad mapp
  log.logQueryAndReply(query,fakeDocID);
  log.close();
  
@@ -41,6 +42,11 @@ public class Log {
     private File file;
     
     public LinkedList<LogEntry> logEntries = new LinkedList<LogEntry>();
+
+    public Log(){ //constructor
+        this.createLogFile("log.txt"); //Creates logfile when object is initiated.
+        readLog("log.txt"); //fills logEntries with file content
+    }
     
     public void close(){
         printWriter.close();
@@ -139,6 +145,9 @@ public class Log {
         
     }
 
+    public LinkedList<LogEntry> getLog() {
+        return logEntries;
+    }
     //reads log and creates a corresponding logEntry object for each line in the log
     public void writeLog(String location, LinkedList<LogEntry> logEntries){
         try{
@@ -149,13 +158,13 @@ public class Log {
                 ListIterator<LogEntry> list = logEntries.listIterator(0);
                 while(list.hasNext()) {
                     LogEntry currentEntry = list.next();
-                    Integer docId = currentEntry.getDocId;
+                    Integer docId = currentEntry.getDocId();
                     Query query = currentEntry.getQuery();
                     String temp = "";
                     for (int i=0; i<query.terms.size(); i++){
                         temp += " "+query.terms.get(i);
                     }
-                    printWriter.println(""+docID+","+temp);
+                    printWriter.println(""+docId+","+temp);
                 }
                 printWriter.close();
             } else{

@@ -68,8 +68,11 @@ public class Indexer {
 		//System.err.println( "Indexing " + f.getPath() );
 		// First register the document and get a docID
 		int docID = generateDocID();
-		if ( docID%1000 == 0 ) System.err.println( "Indexed " + docID + " files" );
-		index.docIDs.put( "" + docID, f.getName() );
+		if ( docID%1000 == 0 ) {
+			System.err.println( "Indexed " + docID + " files" );
+		}
+		index.docIDs.put( "" + docID, f.getName());
+		index.titlesToDocId.put(f.getName(),docID);
 		try {
 		    //  Read the first few bytes of the file to see if it is 
 		    // likely to be a PDF 

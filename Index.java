@@ -35,6 +35,7 @@ public interface Index {
     public static final int SUBPHRASE = 2;
 	
     public HashMap<String, String> docIDs = new HashMap<String,String>();
+    public HashMap<String, Integer> titlesToDocId = new HashMap<String,Integer>();
     public HashMap<String,Integer> docLengths = new HashMap<String,Integer>();
 
     public void insert( String token, int docID, int offset );
