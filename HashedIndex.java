@@ -47,14 +47,12 @@ public class HashedIndex implements Index {
     
     boolean verbose = false;
     
-    Log log = new Log();
+//    Log log = new Log();
     
     /**
      *  Inserts this token in the index.
      */
-    public int getDocId(String title) {
-        
-    }
+
 
     public void insert( String token, int docID, int offset ) {
         //
@@ -124,9 +122,10 @@ public class HashedIndex implements Index {
         
         PostingsList postingsList = new PostingsList();
         
+        
         if (queryType == 0){ //intersection
             
-            log.readLog("log.txt");
+            
             postingsList = intersectQuery(query);
             
             
@@ -145,6 +144,39 @@ public class HashedIndex implements Index {
             if (rankingType == 0){
                 postingsList = rankedQuery(query);
             }
+            
+        }
+        
+        if (queryType == 3){ //personalized search
+            
+            Log log = new Log();
+            log.readLog("log.txt");
+            log.close();
+            
+        
+
+            int newQueryType = RANKED_QUERY;
+            query.relevanceFeedback(log.logEntries);
+            
+            //relevanceFeedback( PostingsList results, boolean[] docIsRelevant, Indexer indexer ) {
+
+            
+            postingsList = search( query, newQueryType, rankingType, structureType );
+            
+            
+            
+            //log.logEntries
+            //System.err.println(log.logEntries.size());
+            
+            
+            
+            
+            
+            //postingsList = intersectQuery(query);
+            
+            
+            
+            
             
         }
 
@@ -191,12 +223,10 @@ public class HashedIndex implements Index {
         double lend_sqrt;
         
 
-
-        int fakeDocID = 123; //docID
-        log.createLogFile("log.txt"); //hamnar i överordnad mapp
-        log.logQueryAndReply(query,fakeDocID);
-        log.close();
-        
+        for (int i=0; i<query.terms.size(); i++){
+            System.err.println(query.terms.get(i));
+            System.err.println(query.weights.get(i));
+        }
         
         
         
@@ -325,6 +355,8 @@ public class HashedIndex implements Index {
         //System.err.println(sum);
             
         for (int i=0; i<newList.size(); i++){
+            //System.err.println(newList.get(i).docID);
+            //System.err.println(newList.get(i).score);
             results.addPostingsEntryByEntry(newList.get(i));
         }
         //System.err.println(sum);

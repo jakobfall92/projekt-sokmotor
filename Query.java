@@ -27,20 +27,24 @@ import org.apache.pdfbox.util.PDFTextStripper;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 
+
+
 public class Query {
     
     public LinkedList<String> terms = new LinkedList<String>();
     public LinkedList<Double> weights = new LinkedList<Double>();
-    public Log log;
-    public LinkedList<LogEntry> logEntries = new LinkedList<LogEntry>();
+    //public Log log;
+    //public LinkedList<LogEntry> logEntries = new LinkedList<LogEntry>();
 
     /**
      *  Creates a new empty Query 
      */
+    
+    
     public Query() {
-        log = new Log();
-        logEntries = log.getLog(); //reads user specific log
+       
     }
+    
 	
     /**
      *  Creates a new Query from a string of words
@@ -50,8 +54,8 @@ public class Query {
 	while ( tok.hasMoreTokens() ) {
 	    terms.add( tok.nextToken() );
 	    weights.add( new Double(1) );
-        log = new Log();
-        logEntries = log.getLog();
+        //log = new Log();
+        //logEntries = log.getLog();
 	}    
     }
     
@@ -72,9 +76,12 @@ public class Query {
     	return queryCopy;
     }
 
+    /*
     public void saveLog() {
         log.writeLog("log.txt",logEntries);
+        log.message("test");
     }
+     
 
     public void addToLog(int docId) {
         LogEntry entry = new LogEntry();
@@ -82,17 +89,20 @@ public class Query {
         entry.setQuery(this);
         logEntries.add(entry);
     }
+     
+     */
     
     /**
      *  Expands the Query using Relevance Feedback
      */
-    public void relevanceFeedback( PostingsList results, boolean[] docIsRelevant, Indexer indexer ) {
+    public void relevanceFeedback( LinkedList<LogEntry> loggedDocuments) {
 	// results contain the ranked list from the current search
 	// docIsRelevant contains the users feedback on which of the 10 first hits are relevant
 	
 	//
 	//  YOUR CODE HERE
 	//
+        
         HashMap<String,Double> howManyInstancesOfTerm = new HashMap<String,Double>();
         HashMap<String,Double> documentWordList = new HashMap<String,Double>();
         HashMap<String,Double> scores = new HashMap<String,Double>();
@@ -108,15 +118,16 @@ public class Query {
         int totalNumberOfRelevantWords = 0;
         double idf;
         
-        for (int i=0; i<10; i++){
-            if (docIsRelevant[i]){
-                numberOfMarkedRelevantDocuments+=1;
-            }
-        }
+
+        numberOfMarkedRelevantDocuments = loggedDocuments.size();
         
-        for (int i=0; i<10; i++){
+        for (int i=0; i<loggedDocuments.size(); i++){
+            if (i>10){
+                break;
+            }
+        //for (int i=0; i<10; i++){
             
-            if (docIsRelevant[i]){
+            if (true){
 
                 documentWordList = new HashMap<String,Double>(); //one wordlist per document
                 lend=0;
@@ -124,8 +135,8 @@ public class Query {
                 
                 try{
                     
-                    String file = "/Users/oskarwilhelmsson/Dropbox/KTH/SearchEngine/davisWiki/";
-                    File f = new File(file + indexer.index.docIDs.get(""+results.get(i).docID));
+                    String file = "/Users/oskarwilhelmsson/Dropbox/KTH/SearchEngine/DavisWiki/";
+                    File f = new File(file + loggedDocuments.get(i).fileName);
                     String patterns_file = new String("patterns.txt");
                     Reader reader = new InputStreamReader( new FileInputStream(f));
                     Tokenizer tok = new Tokenizer(reader, true, false, true, patterns_file);
@@ -230,9 +241,13 @@ public class Query {
         
         double sum = 0;
         
-        entrySet = scores.entrySet();
+        //sorting
+        HashMap<Integer, String> map = sortByValues(scores);
+        int counter = 0;
+        
+        entrySet = map.entrySet();
         it = entrySet.iterator();
-        while (it.hasNext()){
+        while (it.hasNext() && counter < 10){
 
             Map.Entry me = (Map.Entry)it.next();
             String newTerm = (String) me.getKey();
@@ -240,12 +255,14 @@ public class Query {
             
             terms.add(newTerm);
             weights.add(newWeight);
-
+            
+            counter++;
             /*
             sum+=(double)newWeight;
+             
             System.err.println(newTerm);
             System.err.println(newWeight);
-             */
+            */
             
             
             
@@ -259,6 +276,26 @@ public class Query {
         
         
     }//end method
+    
+    private static HashMap sortByValues(HashMap map) {
+        List list = new LinkedList(map.entrySet());
+        // Defined Custom Comparator here
+        Collections.sort(list, new Comparator() {
+            public int compare(Object o2, Object o1) {
+                return ((Comparable) ((Map.Entry) (o1)).getValue())
+                .compareTo(((Map.Entry) (o2)).getValue());
+            }
+        });
+        
+        // Here I am copying the sorted list in HashMap
+        // using LinkedHashMap to preserve the insertion order
+        HashMap sortedHashMap = new LinkedHashMap();
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            Map.Entry entry = (Map.Entry) it.next();
+            sortedHashMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedHashMap;
+    }
     
 }//end class
 

@@ -14,9 +14,10 @@ import java.util.*;
 
 public class LogEntry implements Comparable<LogEntry>,Serializable {
     
-    private int docID;
-    private double score;
-    private Query query;
+    public int docID;
+    public double score;
+    public Query query;
+    public String fileName;
     
     
     public int compareTo( LogEntry other ) {
@@ -35,6 +36,10 @@ public class LogEntry implements Comparable<LogEntry>,Serializable {
         return score;
     }
     
+    public String getFileName(){
+        return fileName;
+    }
+    
     public void setQuery(Query theQuery){
         query = theQuery;
     }
@@ -45,6 +50,10 @@ public class LogEntry implements Comparable<LogEntry>,Serializable {
     
     public void setScore(double theScore){
         score = theScore;
+    }
+    
+    public void setFileName(String name){
+        fileName = name;
     }
     
 }

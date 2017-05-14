@@ -65,7 +65,7 @@ public class SearchGUI extends JFrame {
 		
     /** The file containing the pageranks. */
     String rank_file = "";
-
+    
 
     /*  
      *   Common GUI resources
@@ -193,7 +193,7 @@ public class SearchGUI extends JFrame {
 		public void actionPerformed( ActionEvent e ) {
 		    // Turn the search string and into a Query
 		    String queryString = queryWindow.getText().toLowerCase().trim();
-		    query.saveLog(); //Save prevoius log to file before begining new search.
+		    //query.saveLog(); //Save prevoius log to file before begining new search.
 		    query = new Query( queryString );
 		    // Search and print results. Access to the index is synchronized since
 		    // we don't want to search at the same time we're indexing new files
@@ -247,8 +247,10 @@ public class SearchGUI extends JFrame {
 			for ( int i = 0; i<10; i++ ) {
 			    docIsRelevant[i] = feedbackButton[i].isSelected(); 
 			}
-			// Expand the current search query with the documents marked as relevant 
-			query.relevanceFeedback( results, docIsRelevant, indexer );
+			// Expand the current search query with the documents marked as relevant
+                
+                //SÄTT PÅ OM VI VILL HA TILLBAKA SAMMA FUNKTIONALITET SOM I LABB 3
+			//query.relevanceFeedback( results, docIsRelevant, indexer );
 			
 			// Perform a new search with the weighted and expanded query. Access to the index is 
 			// synchronized since we don't want to search at the same time we're indexing new files
@@ -332,7 +334,13 @@ public class SearchGUI extends JFrame {
 	        if (e.getClickCount() == 2) {
 	           String selectedDoc = (String) list.getSelectedValue();
 	           userRequest(selectedDoc);
-	           query.addToLog(indexer.index.titlesToDocId.get(selectedDoc));
+                
+                
+                Log log = new Log();
+                log.logQueryReplyAndFilename(query,indexer.index.titlesToDocId.get(selectedDoc), selectedDoc);
+                log.close();
+	           
+               
 	         }
 	    }
 

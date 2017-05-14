@@ -45,7 +45,7 @@ public class Log {
 
     public Log(){ //constructor
         this.createLogFile("log.txt"); //Creates logfile when object is initiated.
-        readLog("log.txt"); //fills logEntries with file content
+        //readLog("log.txt"); //fills logEntries with file content
     }
     
     public void close(){
@@ -56,7 +56,7 @@ public class Log {
         printWriter.println(message);
     }
     
-    public void logQueryAndReply(Query query,int docID){
+    public void logQueryReplyAndFilename(Query query,int docID, String fileName){
         String temp = "";
         for (int i=0; i<query.terms.size(); i++){
             temp += " "+query.terms.get(i);
@@ -64,7 +64,7 @@ public class Log {
         }
         
         
-        printWriter.println(""+docID+","+temp);
+        printWriter.println(""+docID+","+temp+","+fileName);
     }
     
     public void createLogFile(String location){
@@ -114,6 +114,7 @@ public class Log {
                     
                     int part1 = Integer.parseInt(parts[0]); // 004 (docid)
                     String part2 = parts[1]; // this is a query
+                    String part3 = parts[2]; // this is a query
                     
                     //System.err.println(""+part1+" "+part2);
                     
@@ -122,7 +123,9 @@ public class Log {
                     Query query = new Query(part2);
                     
                     logEntry.setQuery(query);
+                    logEntry.setFileName(part3);
                     logEntries.add(logEntry);
+                    
                     
                     
                 }
